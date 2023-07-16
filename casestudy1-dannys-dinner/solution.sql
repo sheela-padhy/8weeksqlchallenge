@@ -86,19 +86,6 @@ WHERE
 GROUP BY customer_id
 ORDER BY customer_id;
 
-use dannys_diner;
-SELECT 
-    *
-FROM
-    members;
-SELECT 
-    *
-FROM
-    menu;
-SELECT 
-    *
-FROM
-    sales;
 
 SELECT 
     customer_id, SUM(price) AS Amount_spent
