@@ -3,7 +3,6 @@ The 8 Week SQL Challenge is an online learning program or course designed to hel
 
 The challenge is created by Danny Ma, a data analyst and educator, and it's available as a free resource for anyone interested in learning and practicing SQL. The program is designed to simulate the experience of working on SQL projects in a professional setting.
 
-
 ## Resources
 * 🍜[Case Study Website](https://8weeksqlchallenge.com/)
 
