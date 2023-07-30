@@ -97,3 +97,60 @@ select runner_id , order_id ,avg(distance/ (duration/60)) as speed from runner_o
 # What is the successful delivery percentage for each runner?
 select runner_id, ((select count(order_id) from runner_orders where cancellation is null)/ (select count(order_id) from runner_orders))* 100 as percentage from runner_orders where runner_id=3 group by runner_id;
 
+
+# Part  C- Ingredient Optimisation
+
+# What are the standard ingredients for each pizza?
+select pizza_id ,exclusions,extras from customer_orders group by pizza_id ;
+
+#  What was the most commonly added extra?
+select extras,count(distinct(extras)) from customer_orders group by extras;
+
+# What was the most common exclusion?
+select exclusions,count(distinct(extras)) from customer_orders group by exclusions;
+
+# Part D:  Pricing and Ratings
+
+# If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?
+
+select * from customer_orders;
+select * from runner_orders;
+select pizza_id, case when pizza_id =1 then 10 when pizza_id =2 then 12 end as amount from customer_orders;
+create table customer_orders_enriched as 
+(select * ,case when pizza_id =1 then 10 when pizza_id =2 then 12 end as amount from customer_orders);
+select * from customer_orders_enriched;
+select runner_id ,sum(amount)  as  money from runner_orders as r inner join customer_orders_enriched as cd on r.order_id=cd.order_id group by runner_id;
+
+# What if there was an additional $1 charge for any pizza extras?
+
+select * from customer_orders;
+select distinct(extras) from customer_orders;
+select runner_id,sum(cost)  as charge from    (select order_id, case when extras = 'null' then 10 
+when extras = '' then 10 
+when extras is NULL then 10 else 12  end  as cost  from customer_orders )a inner join runner_orders as r on  a.order_id=r.order_id  group by runner_id ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
