@@ -129,9 +129,29 @@ select runner_id,sum(cost)  as charge from    (select order_id, case when extras
 when extras = '' then 10 
 when extras is NULL then 10 else 12  end  as cost  from customer_orders )a inner join runner_orders as r on  a.order_id=r.order_id  group by runner_id ;
 
+#The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - 
+generate a schema for this new table and insert your own data 
+for ratings for each successful customer order between 1 to 5.
+
+create table rating (order_id int ,rate  int);
+insert into rating values (1,1), (2,3),(3,2),(4,4),(5,5),(6,1),(7,2),(8,4),(9,5),(10,2);
+select * from rating;
 
 
+# Using your newly generated table - can you join all of the information together to form a table which has the following information for successful deliveries?
+# customer_id
+# order_id
+# runner_id
+# rating
+# order_time
+# pickup_time
+# Time between order and pickup
+# Delivery duration
+# Average speed
+# Total number of pizzas
 
+select c.order_id,rate ,customer_id ,runner_id ,pickup_time,duration,avg(distance/duration) as speed ,count(c.order_id) as total_no_of_pizza ,TIMESTAMPDIFF(MINUTE,order_time,pickup_time ) as  
+time_diff from customer_orders as c  inner join runner_orders as r on c.order_id=r.order_id inner join rating as rt on rt.order_id=c.order_id group by order_id;
 
 
 
