@@ -25,6 +25,7 @@ round((sales/transactions),2) as avg_transaction
 from weekly_sales;
 select * from clean_weekly_sales;
 
+2. Data Exploration
 
 # What day of the week is used for each week_date value?
 select dayname(week_date) from clean_weekly_sales;
@@ -58,3 +59,30 @@ SELECT calendar_year,
 
 select * from percentage_table;
 select calendar_year,month_number,(retail_sales/total_sales)*100 as retail_percentage ,(shopify_sales/total_sales)*100 as shopify_percentage from percentage_table group by month_number,calendar_year;
+
+# What is the percentage of sales by demographic for each year in the dataset?
+with demo_cte as 
+(select calendar_year,
+SUM(CASE WHEN demographic="Couples" THEN sales END) AS couple_sales,
+          SUM(CASE
+                  WHEN demographic="Families" THEN sales
+              END) AS family_sales,
+          sum(sales) AS total_sales
+   FROM clean_weekly_sales
+   GROUP BY calendar_year)
+
+select calendar_year,round((couple_sales/total_sales)*100,2) as couple_percentage,round((family_sales/total_sales )*100,2) as family_percentage from demo_cte group by calendar_year;
+
+# Which age_band and demographic values contribute the most to Retail sales.
+select age_band,demographic,sum(sales) as retail_sales,(sum(sales)/(select sum(sales) from clean_weekly_sales where platform='Retail'))*100   
+as retail_percentage from clean_weekly_sales where platform = 'Retail' group by age_band,demographic order by sum(sales) desc;
+
+
+# Can we use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify? If not - how would you calculate it instead?
+# we cannot  use the avg_transaction column to find the average transaction size for each year for Retail vs Shopify.
+select platform,calendar_year,round(avg(avg_transaction)) as average_transaction,round((sum(sales)/sum(transactions))) as correct_avg_transaction from clean_weekly_sales group by platform,calendar_year;
+
+
+
+
+
