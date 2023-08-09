@@ -84,7 +84,7 @@ select * from product_info;
 
 # Additionally, create another table which further aggregates the data for the above points but this time for each product category instead of individual products.
  
-create table  product_info as 
+create table  product_category as 
 with cart_vie_cte as 
 (select visit_id,product_category,sum(case when event_type = 1 then 1 else 0 end) as num_of_view ,sum(case when event_type = 2 then 1 else 0 end) as num_add_cart 
 from events as e inner join page_hierarchy as p on e.page_id=p.page_id  where product_id is not null group by visit_id,product_category ),
@@ -95,12 +95,12 @@ visit_cte as
 (case when purchase_id is not null then 1 else 0 end) as purchase
 from cart_vie_cte left join purchase_cte
 on visit_id = purchase_id),
-sushant_cte as 
+product_category_cte as 
 (select product_category,sum(case when num_add_cart =1 and purchase =0 then 1 else 0 end) as abandoned ,sum(case when num_add_cart =1 and purchase =1 then 1 else 0 end) as 
 purchased ,sum(num_of_view) as view ,sum(num_add_cart) as add_to_cart
 from visit_cte group by product_category)
-select * from page_cte;
-select * from product_info;
+select * from product_category_cte;
+select * from product_category;
 
 # Use your 2 new output tables - answer the following questions:
  
