@@ -29,7 +29,7 @@ select round(avg(total_discount_amount),2) as avg_discount from discount_cte;
 # What is the percentage split of all transactions for members vs non-members?
 with member_cte as 
 (select member,round(count(member)/(select count(member) from sales)*100,2) as percentage from sales group by member)
-select case when member=0 then 'male' else 'female' end as gender,percentage from member_cte;
+select case when member=0 then 'member' else 'non-member' end as gender,percentage from member_cte;
 
 
 # What is the average revenue for member transactions and non-member transactions?
@@ -58,29 +58,3 @@ select product_name,segment_name from product_details;
 with product_cte as 
 (select segment_name ,product_name,rank() over(partition by segment_name order by sum(qty) desc) as quantity_rank from sales as s inner join product_details as p  on p.product_id=s.prod_id  group by segment_name,product_name)
 select segment_name ,product_name from product_cte where quantity_rank = 1; 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
